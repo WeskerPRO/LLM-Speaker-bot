@@ -114,8 +114,14 @@ SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 ### 🚧 Upcoming
 - [ ] Flutter mobile app integration (Android & iOS)
 - [ ] Flutter web app integration
-- [ ] Upgrade to a more sophisticated LLM model
+- [ ] Upgrade to a more sophisticated LLM model (Mistral 7B / LLaMA)
 - [ ] AI Food & Recipe Coach — user inputs available ingredients, AI suggests meals and acts as a nutrition coach
+- [ ] Voice input — user speaks to the AI Doctor (Speech-to-Text)
+- [ ] Voice output — AI Doctor responds with voice (Text-to-Speech)
+- [ ] Conversation memory — AI remembers previous messages in session
+- [ ] Chat history — save and reload previous conversations per user
+- [ ] User health profile — store age, weight, medical history
+- [ ] Dark / Light mode toggle
 
 ## License
 MIT
