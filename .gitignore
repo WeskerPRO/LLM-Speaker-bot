@@ -1,0 +1,33 @@
+# Environments
+.venv/
+venv/
+ENV/
+
+# Secrets
+.env
+
+# Python
+brain_api/__pycache__/
+*.py[cod]
+
+# Data
+data/
+
+# AI Model
+brain_api/chat_lung_model/
+
+# Java/Maven
+target/
+*.class
+*.jar
+
+# Flutter
+chat_app/ai-chat-app/src/java/chat_ui/chat_bot_app/build/
+chat_app/ai-chat-app/src/java/chat_ui/chat_bot_app/.dart_tool/
+chat_app/ai-chat-app/src/java/chat_ui/chat_bot_app/.flutter-plugins
+chat_app/ai-chat-app/src/java/chat_ui/chat_bot_app/.flutter-plugins-dependencies
+
+# IDE
+.idea/
+*.iml
+.vscode/
