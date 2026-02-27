@@ -1,4 +1,4 @@
-# LLM Speaker Bot 🤖🔊
+# Demo LLM Bot 🤖
 ![Version](https://img.shields.io/badge/version-0.1.0-blue)
 
 An AI Doctor Chat Bot powered by **SmolLM2-1.7B-Instruct**, featuring a Java desktop UI with a full registration/login system and a Python AI backend.
