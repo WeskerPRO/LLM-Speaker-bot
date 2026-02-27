@@ -18,7 +18,24 @@ nltk.download('punkt')
 
 # 1. Setup Tokenization
 def tokenize_fn(examples):
-    outputs = tokenizer(examples["response"], truncation=True, padding="max_length", max_length=512)
+    formatted_texts = []
+    for instr, resp in zip(examples["instruction"], examples["response"]):
+        # We wrap the Q&A in the actual chat format the model was born with
+        messages = [
+            {"role": "user", "content": instr},
+            {"role": "assistant", "content": resp}
+        ]
+        # tokenize=False gives us a string with <|im_start|> tags included
+        text = tokenizer.apply_chat_template(messages, tokenize=False)
+        formatted_texts.append(text)
+
+    outputs = tokenizer(
+        formatted_texts,
+        truncation=True,
+        padding="max_length",
+        max_length=512
+    )
+
     outputs["labels"] = outputs["input_ids"].copy()
     return outputs
 
@@ -41,32 +58,12 @@ def plot_results(history):
     plt.xlabel("Epochs")
     plt.ylabel("Score")
     plt.title("Perplexity Over Epochs (Log Scale)")
-    plt.yscale('log') 
+    plt.yscale('log')
     plt.legend()
     plt.grid(True)
 
     plt.tight_layout()
     plt.show()
-
-# 3. Evaluation (BLEU Score)
-def evaluate_bleu(model, tokenizer, test_data):
-    model.eval()
-    scores = []
-    smooth = SmoothingFunction().method1
-    print("\n--- Calculating BLEU Scores on Test Samples ---")
-    
-    for i in range(min(10, len(test_data))):
-        reference = test_data[i]['response'].split()
-        inputs = tokenizer(test_data[i]['response'][:50], return_tensors="pt").to(device) # Short prompt
-        
-        with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=50, pad_token_id=tokenizer.eos_token_id)
-        
-        prediction = tokenizer.decode(outputs[0], skip_special_tokens=True).split()
-        score = sentence_bleu([reference], prediction, smoothing_function=smooth)
-        scores.append(score)
-    
-    print(f"Average BLEU Score: {np.mean(scores):.4f}")
 
 # 4. Training Loop
 def train_model(model, train_loader, val_loader, optimizer, scheduler, epochs, patience):
@@ -90,7 +87,7 @@ def train_model(model, train_loader, val_loader, optimizer, scheduler, epochs, p
             train_pbar.set_postfix({'loss': f"{loss.item():.4f}"})
 
         model.eval()
-        val_loss = 0 
+        val_loss = 0
         val_pbar = tqdm(val_loader, desc=f"Epoch {epoch+1} [Val]")
 
         with torch.no_grad():
@@ -123,16 +120,16 @@ def train_model(model, train_loader, val_loader, optimizer, scheduler, epochs, p
             if counter >= patience:
                 print("Early stopping triggered.")
                 break
-                
+
     return history
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = "HuggingFaceTB/SmolLM2-135M-Instruct"
-    
+    model_name = "HuggingFaceTB/SmolLM2-1.7B-Instruct" # "HuggingFaceTB/SmolLM2-135M-Instruct"
+
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    if tokenizer.pad_token is None: 
+    if tokenizer.pad_token is None:
       tokenizer.pad_token = tokenizer.eos_token
 
     model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
@@ -149,18 +146,17 @@ if __name__ == "__main__":
     # --- Data Prep ---
     dataset = load_dataset("json", data_files="medical_data.jsonl", split="train")
     split = dataset.train_test_split(test_size=0.2, seed=42)
-    
+
     train_set = split["train"].map(tokenize_fn, batched=True).remove_columns(dataset.column_names)
     val_set = split["test"].map(tokenize_fn, batched=True).remove_columns(dataset.column_names)
     train_set.set_format("torch"); val_set.set_format("torch")
 
-    train_loader = DataLoader(train_set, batch_size=4, shuffle=True)
-    val_loader = DataLoader(val_set, batch_size=4)
+    train_loader = DataLoader(train_set, batch_size=2, shuffle=True)
+    val_loader = DataLoader(val_set, batch_size=2)
 
-    optimizer = AdamW(model.parameters(), lr=5e-5, weight_decay=1e-3)
+    optimizer = AdamW(model.parameters(), lr=5e-5, weight_decay=5e-4)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2)
 
     # --- Execution ---
-    history = train_model(model, train_loader, val_loader, optimizer, scheduler, 10, 3)
+    history = train_model(model, train_loader, val_loader, optimizer, scheduler, 5, 3)
     plot_results(history)
-    evaluate_bleu(model, tokenizer, split["test"])
