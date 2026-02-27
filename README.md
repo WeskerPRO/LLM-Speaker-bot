@@ -74,6 +74,34 @@ Or simply run `ChatWindow.java` from your IDE.
 > ⚠️ AI model files are **not included** in this repository due to size limitations.
 > Download or train the model separately and place it in `brain_api/chat_lung_model/`
 
+## Email Configuration (Required)
+
+This app uses Gmail SMTP for email verification and password reset.
+
+### Steps:
+1. Open `brain_api/main.py`
+2. Fill in your Gmail credentials:
+```python
+SENDER_EMAIL = "your_email@gmail.com"
+SENDER_PASSWORD = "your_app_password"
+```
+
+### How to get a Gmail App Password:
+1. Go to your Google Account → **Security**
+2. Enable **2-Step Verification** (if not already)
+3. Go to **Security** → **App Passwords**
+4. Select app: **Mail** → Select device: **Windows/Mac**
+5. Google will generate a **16-character password** → paste it into `SENDER_PASSWORD`
+
+> ⚠️ Never share or commit your email credentials to GitHub!
+> Consider using a `.env` file to store them securely:
+```python
+import os
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+```
+> Then add `.env` to your `.gitignore` ✅
+
 ## Roadmap
 
 ### ✅ Completed
