@@ -13,8 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 SMTP_SERVER = "smtp.gmail.com" # (Gmail's) SMTP server
 SMTP_PORT = 587 # Standard port for secure email submission (TLS)
-SENDER_EMAIL = "yulchievshahzod@gmail.com" # Use your actual Gmail address here. Make sure to set up an App Password if you have 2FA enabled.
-SENDER_PASSWORD = "zqtd ohbr bwaa gjbp" # For security, you should use environment variables or a secure vault to store sensitive information like email credentials in a real application. This is just for demonstration purposes.
+SENDER_EMAIL = "" # Use your actual Gmail address here. Make sure to set up an App Password if you have 2FA enabled.
+SENDER_PASSWORD = "" # For security, you should use environment variables or a secure vault to store sensitive information like email credentials in a real application. This is just for demonstration purposes.
 
 # 1. Load your CUSTOM "Lung AI" model
 MODEL_PATH = "./chat_lung_model" 
