@@ -110,6 +110,8 @@ SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 - ✅ Java Chat UI
 - ✅ Registration & Login system
 - ✅ Email verification & Password reset
+- ✅ Persistent chat history — all conversations saved to database and reloaded per user
+- ✅ Async AI requests — UI never freezes while AI is responding
 
 ### 🚧 Upcoming
 - [ ] Flutter mobile app integration (Android & iOS)
@@ -119,7 +121,6 @@ SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 - [ ] Voice input — user speaks to the AI Doctor (Speech-to-Text)
 - [ ] Voice output — AI Doctor responds with voice (Text-to-Speech)
 - [ ] Conversation memory — AI remembers previous messages in session
-- [ ] Chat history — save and reload previous conversations per user
 - [ ] User health profile — store age, weight, medical history
 - [ ] Dark / Light mode toggle
 
